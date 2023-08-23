@@ -5,6 +5,7 @@ import csv
 app = Flask(__name__)
 
 
+
 @app.route('/register', methods=['POST, GET'])
 def homePage():
     # on submit
@@ -35,7 +36,16 @@ def loginPage():
     else:
         return render_template('login.html')
 
-        
+
+
+@app.route('/rooms')
+def chat():
+
+
+
+
+
+
 
 
 
