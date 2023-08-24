@@ -1,10 +1,9 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, render_template, request, session, redirect
 import csv
 import os
 
 
 app = Flask(__name__)
-
 
 
 @app.route('/register', methods=['POST', 'GET'])
@@ -25,7 +24,6 @@ def register():
         return render_template('register.html')
 
 
-
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method=='POST':
@@ -40,32 +38,25 @@ def login():
 
 @app.route('/lobby', methods=['POST', 'GET'])
 def lobby():
-    if request.method=='POST':
-        roomName=request.form["new_room"]+".txt"
-        fileDirect = os.path.join("./rooms", roomName)
-        f = open(fileDirect, 'w').close()
-
+    if request.method == 'POST':
+        if 'new_room' in request.form and 'Create' in request.form:
+            roomName = request.form["new_room"] + ".txt"
+            fileDirect = os.path.join("./rooms", roomName)
+            f = open(fileDirect, 'w').close()
+        elif 'room' in request.form and 'enter' in request.form:
+            roomName = request.form["room"]
+            return redirect(url_for('chat', room_name=roomName))
     rooms = os.listdir("./rooms")
     rooms = [os.path.splitext(room)[0] for room in rooms]
     return render_template('lobby.html', room_names=rooms)
+
     
-
-
-
-
-
-
-
-
-
-
-
 
 def checkIfUserExist(username, password):
     with open('users.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
-            if row and row[0] == username:
+            if row and row[0] == username and row[1] == password:
                 return True
     return False
 
@@ -80,4 +71,4 @@ def addUser(username, password):
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)

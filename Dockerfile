@@ -8,5 +8,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 # copy the content of the templates directory to the working directory
 COPY / .
+# set FLASK_ENV environment variable to "development"
+ENV FLASK_ENV=development
 # command to run on container start
 CMD [ "python", "./chatApp.py"]
