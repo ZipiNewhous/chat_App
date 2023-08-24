@@ -43,8 +43,23 @@ def login():
 def lobby():
     if request.method=='POST':
         roomName=request.form["new_room"]+".txt"
-        os.mkdir(os.path.join("./rooms", roomName))
-    return render_template('lobby.html')
+        fileDirect = os.path.join("./rooms", roomName)
+        f = open(fileDirect, 'w').close()
+
+    rooms = os.listdir("./rooms")
+    rooms = [os.path.splitext(room)[0] for room in rooms]
+    return render_template('lobby.html', room_names=rooms)
+    
+
+
+
+
+
+
+
+
+
+
 
 
 
