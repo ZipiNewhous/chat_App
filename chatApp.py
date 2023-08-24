@@ -38,7 +38,6 @@ def login():
         return render_template('login.html')
 
 
-
 @app.route('/lobby', methods=['POST', 'GET'])
 def lobby():
     if request.method=='POST':
@@ -47,30 +46,22 @@ def lobby():
     return render_template('lobby.html')
 
 
-
-
 def checkIfUserExist(username, password):
-    rows = []
-    with open("./users.csv", 'r') as file:
-        csvreader = csv.reader(file)
-        header = next(csvreader)
-        for row in csvreader:
-            rows.append(row)
-    if username in rows:
-        return True
-    else:
-        return False 
-
+    with open('users.csv', 'r') as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if row and row[0] == username:
+                return True
+    return False
 
 
 def addUser(username, password):
     row = [username, password]
-    with open('./users.csv', 'a', newline='\n') as file:  
+    with open('./users.csv', 'a', newline='\n') as file:
         writer = csv.writer(file, lineterminator='\n')
+        if file.tell() == 0:
+            writer.writerow(['username', 'password'])
         writer.writerow(row)
-
-
-
 
 
 if __name__ == "__main__":
