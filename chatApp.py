@@ -5,6 +5,7 @@ import datetime
 
 app = Flask(__name__)
 app.secret_key = "123"
+PATH_ROOMS =  os.environ["PATH_ROOMS"]
 
 @app.route('/')
 def home_page():
@@ -43,12 +44,12 @@ def lobby():
     if request.method == 'POST':
         if 'new_room' in request.form and 'Create' in request.form:
             roomName = request.form["new_room"] + ".txt"
-            fileDirect = os.path.join("./rooms", roomName)
+            fileDirect = os.path.join(PATH_ROOMS, roomName)
             f = open(fileDirect, 'w').close()
         elif 'room' in request.form and 'enter' in request.form:
             roomName = request.form["room"]
             return redirect(url_for('chat', room_name=roomName))
-    rooms = os.listdir("./rooms")
+    rooms = os.listdir(PATH_ROOMS)
     rooms = [os.path.splitext(room)[0] for room in rooms]
     return render_template('lobby.html', room_names=rooms)
     
@@ -79,14 +80,14 @@ def addMessage(room_id, msg):
     else:
         username = 'guest'
     date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open(f'rooms/{room_id}.txt', 'a') as file:
+    with open(f'{PATH_ROOMS}/{room_id}.txt', 'a') as file:
         file.write(f'[{date}] {username} : {msg}\n')
 
         
 
 def getMessages(room_id):
     # messages=[]
-    with open(f'rooms/{room_id}.txt', 'r') as file:
+    with open(f'{PATH_ROOMS}/{room_id}.txt', 'r') as file:
         # for line in file:
         #     messages.append(line.rstrip())
         messages=file.read()
