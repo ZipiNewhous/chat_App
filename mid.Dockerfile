@@ -4,11 +4,10 @@ FROM python:3.8-slim
 WORKDIR /code
 # copy the dependencies file to the working directory
 COPY requirements.txt .
-# Install dependencies
-RUN pip install -r requirements.txt
+# Install dependencies, using caching
+RUN pip install -r requirements.txt --no-cache-dir
 # copy the content of the templates directory to the working directory
 COPY / .
-
 ENV PATH_ROOMS "./rooms"
 # set FLASK_ENV environment variable to "development"
 ENV FLASK_ENV=development
