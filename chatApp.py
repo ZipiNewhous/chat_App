@@ -68,10 +68,10 @@ def update_chat(room_id):
 
 # 
 @app.route('/api/chat/clear/<room_id>', methods=['POST'])
+
 def clear(room_id):
-    if request.method=='POST':
-        with open(f'{PATH_ROOMS}/{room_id}.txt', 'w') as file:
-            file.write('')
+    with open(f'{PATH_ROOMS}/{room_id}.txt', 'w') as file:
+        file.write('')
 
     
 
@@ -120,6 +120,7 @@ def addUser(username, password):
         if file.tell() == 0:
             writer.writerow(['username', 'password'])
         writer.writerow(row)
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

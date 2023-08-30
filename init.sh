@@ -1,3 +1,4 @@
+#!/bin/bash
 # ./delete
 # Build the image
 docker build -t chat_app -f thin.Dockerfile .
