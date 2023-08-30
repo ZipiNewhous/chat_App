@@ -66,6 +66,16 @@ def update_chat(room_id):
     messages=getMessages(room_id)
     return messages
 
+
+@app.route('/api/chat/clear/<room_id>', methods=['POST'])
+def clear(room_id):
+    if request.method=='POST':
+        with open(f'{PATH_ROOMS}/{room_id}.txt', 'w') as file:
+            file.write('')
+
+    
+
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
