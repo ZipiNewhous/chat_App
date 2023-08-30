@@ -16,12 +16,12 @@ fi
 
 # Tag the image
 echo "Tagging the image..."
-docker tag "$version" "$commit_hash"
+git tag "$version" "$commit_hash"
 
 # Push the image to the repository
 echo "Pushing the image to GitHub..."
-docker push origin "$version"
-docker push chat_app:latest
+git push origin "$version"
+git push latest
 
 # # Build the image
 docker build -t "chat_app:$version" .
