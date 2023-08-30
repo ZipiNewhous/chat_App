@@ -66,7 +66,7 @@ def update_chat(room_id):
     messages=getMessages(room_id)
     return messages
 
-
+# 
 @app.route('/api/chat/clear/<room_id>', methods=['POST'])
 def clear(room_id):
     if request.method=='POST':
