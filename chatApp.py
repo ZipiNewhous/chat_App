@@ -6,6 +6,7 @@ import datetime
 app = Flask(__name__)
 app.secret_key = "123"
 PATH_ROOMS =  os.environ["PATH_ROOMS"]
+PATH_USERS =  os.environ["PATH_USERS"]
 
 @app.route('/')
 def home_page():
@@ -77,12 +78,22 @@ def clear(room_id):
         file.writelines(lines)
     messages=getMessages(room_id)
     return messages
-    
+   
 
 @app.route('/logout')
 def logout():
     session.pop('username', None)
     return redirect('/register')
+
+
+@app.route('/health')
+def health():
+  return 'OK', 200
+
+
+
+
+
 
 
 
@@ -109,7 +120,7 @@ def getMessages(room_id):
 
 
 def checkIfUserExist(username, password):
-    with open('users.csv', 'r') as file:
+    with open(PATH_USERS, 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if row and row[0] == username and row[1] == password:
@@ -118,7 +129,7 @@ def checkIfUserExist(username, password):
 
 def addUser(username, password):
     row = [username, password]
-    with open('./users.csv', 'a', newline='\n') as file:
+    with open('PATH_USERS', 'a', newline='\n') as file:
         writer = csv.writer(file, lineterminator='\n')
         if file.tell() == 0:
             writer.writerow(['username', 'password'])
