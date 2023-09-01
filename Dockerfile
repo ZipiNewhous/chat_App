@@ -11,6 +11,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 # copy the content of the templates directory to the working directory
 COPY / .
-HEALTHCHECK --interval=10s --timeout=3s CMD curl --fail http://localhost/health || exit 1
+HEALTHCHECK --interval=10s --timeout=3s CMD curl --fail http://localhost:5000/health || exit 1
 # command to run on container start
 CMD [ "python", "./chatApp.py"]
