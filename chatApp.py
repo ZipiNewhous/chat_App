@@ -6,11 +6,12 @@ import datetime
 app = Flask(__name__)
 app.secret_key = "123"
 PATH_ROOMS =  os.environ["PATH_ROOMS"]
-PATH_USERS =  os.environ["PATH_USERS"]
+
 
 @app.route('/')
 def home_page():
     return render_template('register.html')
+
 
 @app.route('/register', methods=['POST', 'GET'])
 def register():
@@ -21,13 +22,15 @@ def register():
         #exist user move to the login page
         if checkIfUserExist(userName, password):
             return redirect('login')
-
         addUser(userName, password)
         session['username'] = userName
+        if not os.path.exists("rooms"):
+            os.makedirs("rooms")
         return redirect('lobby', code=302)
 
     # on loading  
     return render_template('register.html')
+
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -37,8 +40,11 @@ def login():
         if not checkIfUserExist(userName, password):
             return redirect('register')
         session['username'] = userName
+        if not os.path.exists("rooms"):
+            os.makedirs("rooms")
         return redirect('lobby', code=302)
     return render_template('login.html')
+
 
 @app.route('/lobby', methods=['POST', 'GET'])
 def lobby():
@@ -59,6 +65,7 @@ def lobby():
 def chat(room_id):
     return render_template('chat.html', room=room_id)
 
+
 @app.route('/api/chat/<room_id>', methods=['POST', 'GET'])
 def update_chat(room_id):
     if request.method=='POST':
@@ -67,7 +74,7 @@ def update_chat(room_id):
     messages=getMessages(room_id)
     return messages
 
-# 
+
 @app.route('/api/chat/clear/<room_id>', methods=['POST'])
 def clear(room_id):
     username = session['username']
@@ -78,9 +85,7 @@ def clear(room_id):
         file.writelines(lines)
     messages=getMessages(room_id)
     return messages
-
     
-   
 
 @app.route('/logout')
 def logout():
@@ -89,11 +94,8 @@ def logout():
 
 
 @app.route('/health')
-def health():
-  return 'OK', 200
-
-
-
+def health_check():
+    return 'OK', 200
 
 
 
@@ -108,7 +110,6 @@ def addMessage(room_id, msg):
     date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(f'{PATH_ROOMS}/{room_id}.txt', 'a') as file:
         file.write(f'[{date}] {username} : {msg}\n')
-
         
 
 def getMessages(room_id):
@@ -120,9 +121,8 @@ def getMessages(room_id):
     return messages
 
 
-
 def checkIfUserExist(username, password):
-    with open(PATH_USERS, 'r') as file:
+    with open('users.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if row and row[0] == username and row[1] == password:
@@ -131,11 +131,13 @@ def checkIfUserExist(username, password):
 
 def addUser(username, password):
     row = [username, password]
-    with open('PATH_USERS', 'a', newline='\n') as file:
+    with open('./users.csv', 'a', newline='\n') as file:
         writer = csv.writer(file, lineterminator='\n')
         if file.tell() == 0:
             writer.writerow(['username', 'password'])
         writer.writerow(row)
+        
+
 
 
 if __name__ == "__main__":
