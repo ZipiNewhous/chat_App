@@ -69,13 +69,18 @@ def update_chat(room_id):
 
 # 
 @app.route('/api/chat/clear/<room_id>', methods=['POST'])
-
 def clear(room_id):
+    username = session['username']
+    with open(f'{PATH_ROOMS}/{room_id}.txt', 'r') as file:
+        lines = file.readlines()
+    lines = filter(lambda line: line.split(' ')[2] != username, lines)
     with open(f'{PATH_ROOMS}/{room_id}.txt', 'w') as file:
         file.writelines(lines)
     messages=getMessages(room_id)
     return messages
+
     
+   
 
 @app.route('/logout')
 def logout():
