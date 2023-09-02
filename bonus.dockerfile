@@ -1,11 +1,15 @@
 # Start with the Alpine Linux image as the base
 FROM alpine:latest
+
+FROM alpine
 # Install any necessary dependencies or packages using the package manager (e.g., apk)
 RUN apk update
 # Start with the Python 3.8 slim image as the base
-FROM python:3.8-slim
+FROM python:3.8-slim as builder
 # set the working directory in the container
 WORKDIR /code
+
+FROM builder
 # Set an environment variable to specify the path to the rooms directory
 ENV PATH_ROOMS "./rooms"
 # Set the Flask environment to development

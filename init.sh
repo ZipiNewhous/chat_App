@@ -1,7 +1,7 @@
 #!/bin/bash
 # ./delete
 # Build the image
-docker build -t chat_app -f thin.Dockerfile .
+docker build -t chat_app -f bonus.dockerfile .
 
 # # Run the container 
 docker run -p 5000:5000 chat_app
