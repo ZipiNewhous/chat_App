@@ -2,6 +2,7 @@
 
 version=$1
 commit_hash=$2
+img_name=chat_app:${version}
 
 # if have time, check validate
 
@@ -14,16 +15,24 @@ if [ -z "$commit_hash" ]; then
   read -p "enter commit hash: " commit_hash
 fi
 
+if [[ "$(docker images -q $img_name)" ]]; then
+  read -p "Image $img_name already exists. Do you want to rebuild it (y/n)? " rebuild
+  # If the user chooses to rebuild the image, delete the existing one.
+  if [[ "$rebuild" == "y" ]]; then
+    docker rmi $img_name
+  fi
+fi
+
 # Build the image
-docker build -t $version .
+docker build -t $img_name .
 
 # Tag the app and the image
 git tag v$version $commit_hash
-docker tag $version zipinewhous/chat_app:$version
+docker tag $version saraleShasha/chat_app:$version
 
 # Push the image to the repository
 git push --follow-tags origin v$version
-docker push zipinewhous/chat_app:${version}
+docker push saraleShasha/chat_app:${version}
 
 
 # Handle errors

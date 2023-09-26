@@ -41,7 +41,7 @@ def login():
             return redirect('register')
         session['username'] = userName
         if not os.path.exists("rooms"):
-            os.makedirs("rooms")
+            os.makedirs("rooms") 
         return redirect('lobby', code=302)
     return render_template('login.html')
 
@@ -113,7 +113,7 @@ def getMessages(room_id):
 
 
 def checkIfUserExist(username, password):
-    with open('users.csv', 'r') as file:
+    with open('data/users.csv', 'r') as file:
         reader = csv.reader(file)
         for row in reader:
             if row and row[0] == username and row[1] == password:
@@ -122,7 +122,7 @@ def checkIfUserExist(username, password):
 
 def addUser(username, password):
     row = [username, password]
-    with open('./users.csv', 'a', newline='\n') as file:
+    with open('data/users.csv', 'a', newline='\n') as file:
         writer = csv.writer(file, lineterminator='\n')
         if file.tell() == 0:
             writer.writerow(['username', 'password'])

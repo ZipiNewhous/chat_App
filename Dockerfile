@@ -3,7 +3,7 @@ FROM python:3.8-slim
 # set the working directory in the container
 WORKDIR /code
 # Set an environment variable to specify the path to the rooms directory
-ENV PATH_ROOMS "./rooms"
+ENV PATH_ROOMS "data/rooms"
 # Set the Flask environment to development
 ENV FLASK_ENV=development
 # copy the dependencies file to the working directory

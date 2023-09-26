@@ -1,13 +1,18 @@
 #!/bin/bash
-# ./delete
-# Build the image
-docker build -t chat_app -f thin.Dockerfile .
 
-# # Run the container 
-docker run -p 5000:5000 chat_app
+# docker build -t chat_app -f thin.Dockerfile .
+# docker run -p 5000:5000 chat_app
 
-# # Run the containet with limit to 2G
-# docker run -it --ulimits nproc=1 --memory=2G chat_app
+version='latest'
+if [ $# -ne 0 ]; then
+  version=$1
+fi
 
-# Run the containet with limit to 1G
-# docker run -it --ulimits nproc=1 --memory=1G chat_app
+# version=$1
+# if [ -z "$version" ]; then
+#   read -p "enter version: " version
+# fi
+
+docker volume create chat-app-data
+docker build -t chat_app:${version} .
+docker run -v chat-app-data:/code/data -p 5000:5000 --name chat-App-run chat_app:${version}
